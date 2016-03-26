@@ -29,7 +29,7 @@
 		<p>
 			<?php echo date('H:i:s', $sec) . $usec;?>
 		</p>
-		<table border=1 id="qandatbl" align="center">
+		<table border="1" align="center">
 			<thead>
 				<tr>
 					<th class="col1">String</th>
@@ -43,51 +43,16 @@
 			</thead>
 
 			<tbody>
-				<tr>
-					<td>md5</td>
-					<?php
-					foreach ($array as $string)
-					{
-						echo '<td>' . md5($string) . '</td>';
-					}
-					?>
-				</tr>
-				<tr>
-					<td>sha1</td>
-					<?php
-					foreach ($array as $string)
-					{
-						echo '<td>' . sha1($string) . '</td>';
-					}
-					?>
-				</tr>
-				<tr>
-					<td>sha2</td>
-					<?php
-					foreach ($array as $string)
-					{
-						echo '<td>' . hash('sha256',$string) . '</td>';
-					}
-					?>
-				</tr>
-				<tr>
-					<td>bcrypt</td>
-					<?php
-					$cost = 10;
-					foreach ($array as $string)
-					{
-						$hash = password_hash($string,PASSWORD_BCRYPT, array(
-							'cost' => $cost
-						));
-						echo '<td>'.'<font style="color:blue;">'.substr($hash,0,7).'</font>'.'<font color="green">'.substr($hash,8,30).'</font>'.'<font color="red">'.substr($hash,31).'</font>'.'</td>';
-					}
-					?>
-				</tr>
+				<?php foreach(hash_algos() as $algo):?>
+				<?php echo '<tr>';?>
+				<?php echo '<td>'.$algo.'</td>';?>
+				<?php foreach($array as $string):?>
+				<?php echo '<td>' . hash($algo,$string) . '</td>';?>
+				<?php endforeach;?>
+				<?php echo '</tr>';?>
+				<?php endforeach;?>
 			</tbody>
 		</table>
-		<p>
-			bcrypt - 2y (code), <?php echo $cost;?> (cost), 22 characters (salt), 31 characters (password)
-		</p>
 		<p>
 			<?php
 				echo 'time completed: '.(microtime(true) - $time_start)
